@@ -1,0 +1,25 @@
+---
+description: Whenever the agent needs details on the context of the project
+globs: 
+alwaysApply: false
+---
+I'm building a personal project called Memoria, which is meant to be a local-first knowledge management tool — something like a second brain.
+
+The idea is to create a simple, minimalist application that lets me take notes in Markdown, organize them using metadata (tags, backlinks, timestamps, etc.), and browse or edit them via a command-line interface. Think: hacker aesthetic, low-design, clean and efficient.
+
+Later on, I want to extend the interface to include a lightweight GUI (likely using Tauri) and potentially a WASM-compatible core that could run in browsers or embedded in other tools.
+
+Long-term, the project may include features like:
+
+- RSS feed aggregation (to monitor and archive content from blogs or docs),
+- AI-assisted scraping or summarizing, to enrich the knowledge base,
+- A local MCP-compatible server, so AI agents or copilots can read from and write to the knowledge system directly.
+
+The project is:
+- Meant to stay simple, composable, and offline-first
+- Aimed at helping me learn Rust deeply — particularly modular architecture, async, CLI ergonomics, deployment, and clean abstractions
+- Designed to be modular, so the core logic (note parsing, indexing, storage) can be reused in different contexts (CLI, GUI, AI, etc.)
+
+I’m not aiming for complexity for its own sake — the goal is to build something usable, clean, and extendable over time. I want help staying consistent with this philosophy: minimalist, local-first, hackable, and long-term useful.
+
+Please keep this context in mind when helping with architecture, structure, naming, and code suggestions.
