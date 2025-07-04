@@ -3,8 +3,10 @@
 ## Phase 0 - Setup
 
 - [x] Créer crate Rust `memoria`
-- [ ] Setup Clippy, Rustfmt, Git
-- [ ] Setup `tracing` pour le logging
+- [x] Setup Clippy, Rustfmt, Git
+- [x] Setup logging
+  - [x] `env_logger` + `log`
+  - [ ] advanced: `tracing`
 - [ ] Gestion des erreurs (thiserror / anyhow)
 
 ---
@@ -54,6 +56,21 @@
 - [ ] MCP server : exposer base via API JSON compatible avec IA (RAG)
 
 ---
+
+## Phase 6 - WASM
+- [ ] Créer une note depuis une URL (scrap via `scraper` ou `select`)
+- [ ] Intégration API AI pour résumé ou mise en contexte
+- [ ] MCP server : exposer base via API JSON compatible avec IA (RAG)
+
+---
+
+## Autres idées de plugins
+- [ ] un moyen de lock les notes avec mdp / touch id sur macos
+- [ ] conversion de notes en pdf
+- [ ] ajout direct dans
+  - [ ] notion
+  - [ ] apple journal
+  - [ ] obsidian ...
 
 ## Learnings
 
