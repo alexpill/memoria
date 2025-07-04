@@ -20,7 +20,7 @@ fn main() -> Result<(), Error> {
     dotenv().ok();
     env_logger::init();
 
-    let notes = read_notes_directory("nots")?;
+    let notes = read_notes_directory("notes")?;
     println!("Found {:?} notes", notes);
 
     Ok(())
