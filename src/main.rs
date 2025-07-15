@@ -1,55 +1,35 @@
-use anyhow::Error;
+mod cli;
+
+use anyhow::Result;
+use clap::Parser;
 use dotenv::dotenv;
-use log::error;
-use std::fs;
-use thiserror::Error;
+use memoria::MemoriaConfig;
 
-#[derive(Debug, Error)]
-pub enum MemoriaError {
-    #[error("Directory not found: {path}")]
-    DirectoryNotFound { path: String },
+use cli::{Cli, Commands, ConfigCommands};
 
-    #[error("Permission denied: {path}")]
-    PermissionDenied { path: String },
-
-    #[error("Other IO error: {source}")]
-    Io { source: std::io::Error },
-}
-
-fn main() -> Result<(), Error> {
+fn main() -> Result<()> {
+    // Initialize environment
     dotenv().ok();
     env_logger::init();
 
-    let notes = read_notes_directory("notes")?;
-    println!("Found {:?} notes", notes);
+    // Ensure config file exists and load configuration
+    MemoriaConfig::ensure_config_exists()?;
+    let config = MemoriaConfig::load()?;
 
-    Ok(())
-}
+    // Parse command line arguments
+    let cli = Cli::parse();
 
-fn map_io_error(e: std::io::Error, path: &str) -> MemoriaError {
-    match e.kind() {
-        std::io::ErrorKind::NotFound => MemoriaError::DirectoryNotFound {
-            path: path.to_string(),
+    // Dispatch to appropriate handler
+    match cli.command {
+        Commands::List => cli::handle_list(&config),
+        Commands::Create { title } => cli::handle_create(&title, &config),
+        Commands::Init { title } => cli::handle_init(&title, &config),
+        Commands::Config { config_command } => match config_command {
+            ConfigCommands::Show => cli::handle_config_show(&config),
+            ConfigCommands::Edit => cli::handle_config_edit(&config),
+            ConfigCommands::Set { key, value } => cli::handle_config_set(&key, &value),
+            ConfigCommands::Get { key } => cli::handle_config_get(&key, &config),
+            ConfigCommands::Reset => cli::handle_config_reset(),
         },
-        std::io::ErrorKind::PermissionDenied => MemoriaError::PermissionDenied {
-            path: path.to_string(),
-        },
-        _ => MemoriaError::Io { source: e },
     }
-}
-
-fn read_notes_directory(path: &str) -> Result<Vec<String>, MemoriaError> {
-    let mut notes = Vec::new();
-
-    let entries = fs::read_dir(path).map_err(|e| map_io_error(e, path))?;
-
-    for entry in entries {
-        let entry = entry.map_err(|e| MemoriaError::Io { source: e })?;
-        let path = entry.path();
-        if path.is_file() && path.extension().is_some_and(|ext| ext == "md") {
-            notes.push(path.to_string_lossy().to_string());
-        }
-    }
-
-    Ok(notes)
 }
