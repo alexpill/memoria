@@ -14,7 +14,10 @@ mod tests {
         let notes_manager = NotesManager::new(temp_dir.path());
 
         let result = notes_manager.list_notes();
-        assert!(matches!(result, Err(MemoriaError::EmptyNotesDirectory { .. })));
+        assert!(matches!(
+            result,
+            Err(MemoriaError::EmptyNotesDirectory { .. })
+        ));
     }
 
     #[test]

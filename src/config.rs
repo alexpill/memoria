@@ -1,7 +1,7 @@
-use std::path::PathBuf;
-use serde::{Deserialize, Serialize};
 use anyhow::{Context, Result};
+use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::PathBuf;
 
 /// Configuration structure for Memoria
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -83,7 +83,7 @@ impl MemoriaConfig {
         let config_dir = dirs::config_dir()
             .context("Could not determine config directory")?
             .join("memoria");
-        
+
         Ok(config_dir.join("config.toml"))
     }
 
@@ -96,10 +96,10 @@ impl MemoriaConfig {
 
         let content = fs::read_to_string(path)
             .with_context(|| format!("Failed to read config file: {:?}", path))?;
-        
+
         let config: MemoriaConfig = toml::from_str(&content)
             .with_context(|| format!("Failed to parse config file: {:?}", path))?;
-        
+
         log::info!("Configuration loaded from {:?}", path);
         Ok(config)
     }
@@ -118,12 +118,12 @@ impl MemoriaConfig {
                 .with_context(|| format!("Failed to create config directory: {:?}", parent))?;
         }
 
-        let content = toml::to_string_pretty(self)
-            .context("Failed to serialize configuration to TOML")?;
-        
+        let content =
+            toml::to_string_pretty(self).context("Failed to serialize configuration to TOML")?;
+
         fs::write(path, content)
             .with_context(|| format!("Failed to write config file: {:?}", path))?;
-        
+
         log::info!("Configuration saved to {:?}", path);
         Ok(())
     }
@@ -137,13 +137,13 @@ impl MemoriaConfig {
     /// Create a default configuration file if it doesn't exist
     pub fn ensure_config_exists() -> Result<()> {
         let path = Self::default_config_path()?;
-        
+
         if !path.exists() {
             let default_config = Self::default();
             default_config.save_to_file(&path)?;
             log::info!("Created default configuration file at {:?}", path);
         }
-        
+
         Ok(())
     }
 }
@@ -166,7 +166,7 @@ mod tests {
     fn test_save_and_load_config() -> Result<()> {
         let temp_dir = tempdir()?;
         let config_path = temp_dir.path().join("test_config.toml");
-        
+
         let original_config = MemoriaConfig {
             general: GeneralConfig {
                 timezone: "Europe/Paris".to_string(),
@@ -174,16 +174,16 @@ mod tests {
             },
             ..Default::default()
         };
-        
+
         // Save configuration
         original_config.save_to_file(&config_path)?;
-        
+
         // Load configuration
         let loaded_config = MemoriaConfig::load_from_file(&config_path)?;
-        
+
         assert_eq!(loaded_config.general.timezone, "Europe/Paris");
         assert_eq!(loaded_config.general.language, "fr");
-        
+
         Ok(())
     }
 
@@ -191,12 +191,12 @@ mod tests {
     fn test_load_nonexistent_config() -> Result<()> {
         let temp_dir = tempdir()?;
         let config_path = temp_dir.path().join("nonexistent.toml");
-        
+
         let config = MemoriaConfig::load_from_file(&config_path)?;
-        
+
         // Should return default configuration
         assert_eq!(config.general.timezone, "UTC");
-        
+
         Ok(())
     }
-} 
+}
