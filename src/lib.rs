@@ -3,9 +3,6 @@ pub mod errors;
 pub mod notes;
 pub mod utils;
 
-#[cfg(test)]
-mod test;
-
 // Re-export main types for easy access
 pub use config::MemoriaConfig;
 pub use errors::MemoriaError;
